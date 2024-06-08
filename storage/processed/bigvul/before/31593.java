@@ -1,0 +1,15 @@
+class bad_class{
+    public void bad() throws Throwable
+        {
+            byte data;
+    
+            /* POTENTIAL FLAW: Use a random value */
+            data = (byte)((new java.security.SecureRandom()).nextInt(1+Byte.MAX_VALUE-Byte.MIN_VALUE) + Byte.MIN_VALUE);
+    
+            LinkedList<Byte> dataLinkedList = new LinkedList<Byte>();
+            dataLinkedList.add(0, data);
+            dataLinkedList.add(1, data);
+            dataLinkedList.add(2, data);
+            (new CWE191_Integer_Underflow__byte_rand_postdec_73b()).badSink(dataLinkedList  );
+        }
+};

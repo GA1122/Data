@@ -1,0 +1,15 @@
+class goodB2G_class{
+    private void goodB2G() throws Throwable
+        {
+            StringBuilder data;
+    
+            /* POTENTIAL FLAW: Call getStringBuilderBad(), which may return null */
+            data = CWE690_NULL_Deref_From_Return__Class_Helper.getStringBuilderBad();
+    
+            LinkedList<StringBuilder> dataLinkedList = new LinkedList<StringBuilder>();
+            dataLinkedList.add(0, data);
+            dataLinkedList.add(1, data);
+            dataLinkedList.add(2, data);
+            (new CWE690_NULL_Deref_From_Return__Class_StringBuilder_73b()).goodB2GSink(dataLinkedList  );
+        }
+};

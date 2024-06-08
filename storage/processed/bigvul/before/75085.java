@@ -1,0 +1,79 @@
+class bad_class{
+    public void bad() throws Throwable
+        {
+            String dataCopy;
+            {
+                String data;
+    
+                data = ""; /* Initialize data */
+    
+                {
+                    InputStreamReader readerInputStream = null;
+                    BufferedReader readerBuffered = null;
+    
+                    /* read user input from console with readLine */
+                    try
+                    {
+                        readerInputStream = new InputStreamReader(System.in, "UTF-8");
+                        readerBuffered = new BufferedReader(readerInputStream);
+    
+                        /* POTENTIAL FLAW: Read data from the console using readLine */
+                        data = readerBuffered.readLine();
+                    }
+                    catch (IOException exceptIO)
+                    {
+                        IO.logger.log(Level.WARNING, "Error with stream reading", exceptIO);
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            if (readerBuffered != null)
+                            {
+                                readerBuffered.close();
+                            }
+                        }
+                        catch (IOException exceptIO)
+                        {
+                            IO.logger.log(Level.WARNING, "Error closing BufferedReader", exceptIO);
+                        }
+    
+                        try
+                        {
+                            if (readerInputStream != null)
+                            {
+                                readerInputStream.close();
+                            }
+                        }
+                        catch (IOException exceptIO)
+                        {
+                            IO.logger.log(Level.WARNING, "Error closing InputStreamReader", exceptIO);
+                        }
+                    }
+                }
+                /* NOTE: Tools may report a flaw here because buffread and isr are not closed.  Unfortunately, closing those will close System.in, which will cause any future attempts to read from the console to fail and throw an exception */
+    
+                dataCopy = data;
+            }
+            {
+                String data = dataCopy;
+    
+                String osCommand;
+                if(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0)
+                {
+                    /* running on Windows */
+                    osCommand = "c:\\WINDOWS\\SYSTEM32\\cmd.exe /c dir ";
+                }
+                else
+                {
+                    /* running on non-Windows */
+                    osCommand = "/bin/ls ";
+                }
+    
+                /* POTENTIAL FLAW: command injection */
+                Process process = Runtime.getRuntime().exec(osCommand + data);
+                process.waitFor();
+    
+            }
+        }
+};

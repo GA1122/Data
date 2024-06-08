@@ -1,0 +1,48 @@
+class bad_class{
+    public void bad() throws Throwable
+        {
+            String data;
+    
+            data = ""; /* Initialize data */
+    
+            /* retrieve the property */
+            {
+                Properties properties = new Properties();
+                FileInputStream streamFileInput = null;
+    
+                try
+                {
+                    streamFileInput = new FileInputStream("../common/config.properties");
+                    properties.load(streamFileInput);
+    
+                    /* POTENTIAL FLAW: Read data from a .properties file */
+                    data = properties.getProperty("data");
+                }
+                catch (IOException exceptIO)
+                {
+                    IO.logger.log(Level.WARNING, "Error with stream reading", exceptIO);
+                }
+                finally
+                {
+                    /* Close stream reading object */
+                    try
+                    {
+                        if (streamFileInput != null)
+                        {
+                            streamFileInput.close();
+                        }
+                    }
+                    catch (IOException exceptIO)
+                    {
+                        IO.logger.log(Level.WARNING, "Error closing FileInputStream", exceptIO);
+                    }
+                }
+            }
+    
+            LinkedList<String> dataLinkedList = new LinkedList<String>();
+            dataLinkedList.add(0, data);
+            dataLinkedList.add(1, data);
+            dataLinkedList.add(2, data);
+            (new CWE78_OS_Command_Injection__PropertiesFile_73b()).badSink(dataLinkedList  );
+        }
+};

@@ -1,0 +1,13 @@
+class good2_class{
+    private void good2() throws Throwable
+        {
+            if (IO.STATIC_FINAL_TRUE)
+            {
+                /* FIX: no backdoor exists */
+                if ((new SecureRandom()).nextInt() == 20000)
+                {
+                    IO.writeLine("Sorry, your license has expired.  Please contact support.");
+                }
+            }
+        }
+};

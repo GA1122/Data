@@ -1,0 +1,101 @@
+class bad_class{
+    public void bad() throws Throwable
+        {
+            String data;
+    
+            while (true)
+            {
+                data = ""; /* Initialize data */
+                /* Read data from a database */
+                {
+                    Connection connection = null;
+                    PreparedStatement preparedStatement = null;
+                    ResultSet resultSet = null;
+                    try
+                    {
+                        /* setup the connection */
+                        connection = IO.getDBConnection();
+                        /* prepare and execute a (hardcoded) query */
+                        preparedStatement = connection.prepareStatement("select name from users where id=0");
+                        resultSet = preparedStatement.executeQuery();
+                        /* POTENTIAL FLAW: Read data from a database query resultset */
+                        data = resultSet.getString(1);
+                    }
+                    catch (SQLException exceptSql)
+                    {
+                        IO.logger.log(Level.WARNING, "Error with SQL statement", exceptSql);
+                    }
+                    finally
+                    {
+                        /* Close database objects */
+                        try
+                        {
+                            if (resultSet != null)
+                            {
+                                resultSet.close();
+                            }
+                        }
+                        catch (SQLException exceptSql)
+                        {
+                            IO.logger.log(Level.WARNING, "Error closing ResultSet", exceptSql);
+                        }
+    
+                        try
+                        {
+                            if (preparedStatement != null)
+                            {
+                                preparedStatement.close();
+                            }
+                        }
+                        catch (SQLException exceptSql)
+                        {
+                            IO.logger.log(Level.WARNING, "Error closing PreparedStatement", exceptSql);
+                        }
+    
+                        try
+                        {
+                            if (connection != null)
+                            {
+                                connection.close();
+                            }
+                        }
+                        catch (SQLException exceptSql)
+                        {
+                            IO.logger.log(Level.WARNING, "Error closing Connection", exceptSql);
+                        }
+                    }
+                }
+                break;
+            }
+    
+            Connection dbConnection = null;
+    
+            try
+            {
+                dbConnection = IO.getDBConnection();
+    
+                /* POTENTIAL FLAW: Set the catalog name with the value of data
+                 * allowing a nonexistent catalog name or unauthorized access to a portion of the DB */
+                dbConnection.setCatalog(data);
+            }
+            catch (SQLException exceptSql)
+            {
+                IO.logger.log(Level.WARNING, "Error getting database connection", exceptSql);
+            }
+            finally
+            {
+                try
+                {
+                    if (dbConnection != null)
+                    {
+                        dbConnection.close();
+                    }
+                }
+                catch (SQLException exceptSql)
+                {
+                    IO.logger.log(Level.WARNING, "Error closing Connection", exceptSql);
+                }
+            }
+    
+        }
+};

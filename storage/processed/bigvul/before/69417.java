@@ -1,0 +1,11 @@
+class good2_class{
+    private void good2() throws Throwable
+        {
+            if (PRIVATE_STATIC_FINAL_FIVE == 5)
+            {
+                /* FIX: ensure assertions cannot be triggered, in this case, to avoid an empty
+                 * function, assert true */
+                assert true; /* INCIDENTAL: CWE 570 - expression is always false - it's "false" because assert(e) basically does if (!(e)) */
+            }
+        }
+};

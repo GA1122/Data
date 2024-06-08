@@ -1,0 +1,14 @@
+class goodG2BSink_class{
+    private void goodG2BSink(String password ) throws Throwable
+        {
+            if (goodG2BPrivate)
+            {
+                if (password != null)
+                {
+                    /* POTENTIAL FLAW: Use password directly in PasswordAuthentication() */
+                    PasswordAuthentication credentials = new PasswordAuthentication("user", password.toCharArray());
+                    IO.writeLine(credentials.toString());
+                }
+            }
+        }
+};
